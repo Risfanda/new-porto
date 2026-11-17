@@ -198,3 +198,14 @@ h1{font-size:clamp(44px,5.1vw,72px)}
  .language-picker { position: static; }
  .language-panel { top: calc(100% + 12px); right: 50%; transform: translateX(50%); }
 }
+
+/* Keep the expanded navigation clear of the home wordmark. */
+@media (min-width: 701px) and (max-width: 1200px) {
+ .home-brand { top: 12px; }
+ .header { margin-top: 64px; height: auto; min-height: 72px; }
+ .header nav { flex-wrap: wrap; justify-content: center; }
+}
+@media (max-width: 700px) {
+ .header nav { gap: 4px; }
+ .header nav a { padding-inline: 10px; }
+}
