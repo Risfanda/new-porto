@@ -109,18 +109,39 @@ const projects = {
     }
   }
 };
-const menu = document.querySelector('.menu-toggle');
 const navigation = document.querySelector('#navigation');
-function closeMenu() { navigation.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); menu.setAttribute('aria-label', 'Buka navigasi'); }
-menu.addEventListener('click', () => { const open = menu.getAttribute('aria-expanded') !== 'true'; navigation.classList.toggle('open', open); menu.setAttribute('aria-expanded', String(open)); menu.setAttribute('aria-label', open ? 'Tutup navigasi' : 'Buka navigasi'); });
-navigation.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
-document.addEventListener('keydown', e => { if(e.key === 'Escape' && navigation.classList.contains('open')) { closeMenu(); menu.focus(); } });
-window.matchMedia('(min-width: 701px)').addEventListener('change', closeMenu);
+const themeToggle = document.querySelector('.theme-toggle');
+function updateThemeControl() {
+ const dark = document.documentElement.dataset.theme === 'dark';
+ themeToggle.setAttribute('aria-pressed', String(dark));
+ themeToggle.title = dark ? 'Light mode' : 'Dark mode';
+ document.querySelector('meta[name="theme-color"]').content = dark ? '#191c19' : '#f5f3ed';
+}
+updateThemeControl();
+themeToggle.addEventListener('click', () => {
+ const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+ document.documentElement.dataset.theme = theme;
+ try { localStorage.setItem('theme', theme); } catch {}
+ updateThemeControl();
+});
+const navLinks = [...navigation.querySelectorAll('a')];
+const navSections = [...document.querySelectorAll('main > section[id]')];
+const sectionObserver = new IntersectionObserver(entries => {
+ entries.forEach(entry => {
+  if (!entry.isIntersecting) return;
+  navLinks.forEach(link => {
+   if (link.hash === `#${entry.target.id}`) link.setAttribute('aria-current', 'location');
+   else link.removeAttribute('aria-current');
+  });
+ });
+}, { rootMargin: '-15% 0px -65% 0px', threshold: 0 });
+navSections.forEach(section => sectionObserver.observe(section));
+
 document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => {
  document.querySelectorAll('[data-filter]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
  let count = 0;
  document.querySelectorAll('.project').forEach(project => { project.hidden = button.dataset.filter !== 'all' && project.dataset.category !== button.dataset.filter; if(!project.hidden) count++; });
- document.querySelector('#filter-status').textContent = `${count} proyek ditampilkan.`;
+ document.querySelector('#filter-status').textContent = currentLanguage === 'en' ? `${count} projects displayed.` : `${count} proyek ditampilkan.`;
 }));
 const dialog = document.querySelector('#project-dialog');
 let projectTrigger;
@@ -128,15 +149,15 @@ const linkLabels = { demo: 'Buka aplikasi', github: 'Kode sumber', prototype: 'L
 document.querySelectorAll('[data-project]').forEach(button => button.addEventListener('click', () => {
  const project = projects[button.dataset.project]; if(!project) return;
  projectTrigger = button;
- document.querySelector('#dialog-title').textContent = project.title;
- document.querySelector('#dialog-tag').textContent = project.tag;
- document.querySelector('#dialog-description').textContent = project.description;
+ document.querySelector('#dialog-title').textContent = translate(project.title);
+ document.querySelector('#dialog-tag').textContent = translate(project.tag);
+ document.querySelector('#dialog-description').textContent = translate(project.description);
  const features = document.querySelector('#dialog-features'); features.replaceChildren();
- project.features.forEach(feature => { const li = document.createElement('li'); li.textContent = feature; features.append(li); });
+ project.features.forEach(feature => { const li = document.createElement('li'); li.textContent = translate(feature); features.append(li); });
  const stack = document.querySelector('#dialog-stack'); stack.replaceChildren();
  project.techStack.forEach(tech => { const span = document.createElement('span'); span.textContent = tech; stack.append(span); });
  const links = document.querySelector('#dialog-links'); links.replaceChildren();
- Object.entries(project.links || {}).forEach(([key,url]) => { const a = document.createElement('a'); a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = `${linkLabels[key] || key} ↗`; links.append(a); });
+ Object.entries(project.links || {}).forEach(([key,url]) => { const a = document.createElement('a'); a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = `${translate(linkLabels[key] || key)} ↗`; links.append(a); });
  dialog.showModal(); dialog.scrollTop = 0; dialog.querySelector('.dialog-close').focus();
 }));
 dialog.querySelector('.dialog-close').addEventListener('click', () => dialog.close());
@@ -144,7 +165,7 @@ dialog.addEventListener('click', e => { const rect = dialog.getBoundingClientRec
 dialog.addEventListener('close', () => projectTrigger?.focus());
 document.querySelector('#copy-email').addEventListener('click', async () => {
  const status = document.querySelector('#copy-status');
- try { await navigator.clipboard.writeText('ifanrisfanda26@gmail.com'); status.textContent = 'Alamat email berhasil disalin.'; }
- catch { status.textContent = 'Belum bisa menyalin. Gunakan tautan email di atas atau salin alamatnya secara manual.'; }
+ try { await navigator.clipboard.writeText('ifanrisfanda26@gmail.com'); status.textContent = translate('Alamat email berhasil disalin.'); }
+ catch { status.textContent = translate('Belum bisa menyalin. Gunakan tautan email di atas atau salin alamatnya secara manual.'); }
 });
 document.querySelector('#year').textContent = new Date().getFullYear();
