@@ -163,6 +163,40 @@ document.querySelectorAll('.about-photo, .portrait-frame').forEach(photo => {
  photo.addEventListener('lostpointercapture', () => photo.classList.remove('is-touched'));
 });
 
+const portraitFrame = document.querySelector('.portrait-frame');
+const portraitReactions = [...portraitFrame.querySelectorAll('.portrait-reaction')];
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+portraitFrame.addEventListener('pointerenter', event => {
+ if (event.pointerType === 'mouse') playPortraitReactions();
+});
+portraitFrame.addEventListener('pointerdown', event => {
+ if (event.pointerType === 'touch' && event.isPrimary) playPortraitReactions();
+});
+
+function playPortraitReactions() {
+ const easing = getComputedStyle(portraitFrame).getPropertyValue('--ease-out').trim();
+ portraitReactions.forEach((reaction, index) => {
+  reaction.getAnimations().forEach(animation => animation.cancel());
+  const direction = index === 0 ? -1 : 1;
+  const frames = [
+   { opacity: 0, easing },
+   { opacity: 1, offset: 0.22 },
+   { opacity: 1, offset: 0.68 },
+   { opacity: 0 }
+  ];
+  if (!reduceMotion.matches) {
+   frames[0].transform = 'scale(0.9)';
+   frames[1].transform = `translate(${direction * 16}px, -32px) rotate(${direction * 12}deg) scale(1.25)`;
+   frames[2].transform = `translate(${direction * 30}px, -64px) rotate(${direction * 18}deg) scale(1.1)`;
+   frames[3].transform = `translate(${direction * 40}px, -96px) rotate(${direction * 24}deg)`;
+  }
+  reaction.animate(frames, {
+   duration: reduceMotion.matches ? 500 : 1500,
+   delay: index * 80
+  });
+ });
+}
+
 document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => {
  document.querySelectorAll('[data-filter]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
  let count = 0;
