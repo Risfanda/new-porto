@@ -137,6 +137,32 @@ const sectionObserver = new IntersectionObserver(entries => {
 }, { rootMargin: '-15% 0px -65% 0px', threshold: 0 });
 navSections.forEach(section => sectionObserver.observe(section));
 
+const revealTargets = document.querySelectorAll(
+ '.about-grid > *, .section-head, .filters, .project, .skills-list > div, ' +
+ '.journey-heading, .journey-entries > *, .contact-top, .contact-section h2, ' +
+ '.contact-bottom, footer'
+);
+const revealObserver = new IntersectionObserver(entries => {
+ entries.forEach(entry => {
+  if (!entry.isIntersecting) return;
+  revealObserver.unobserve(entry.target);
+  const target = entry.target;
+  target.classList.add('section-revealed');
+  const clearReveal = () => target.classList.remove('section-revealed');
+  const reveal = target.getAnimations().find(animation => animation.animationName === 'portfolio-enter');
+  if (reveal) reveal.finished.then(clearReveal, clearReveal);
+  else clearReveal();
+ });
+}, { threshold: 0.08 });
+revealTargets.forEach(target => revealObserver.observe(target));
+
+document.querySelectorAll('.about-photo, .portrait-frame').forEach(photo => {
+ photo.addEventListener('pointerdown', event => {
+  if (event.pointerType === 'touch' && event.isPrimary) photo.classList.add('is-touched');
+ });
+ photo.addEventListener('lostpointercapture', () => photo.classList.remove('is-touched'));
+});
+
 document.querySelectorAll('[data-filter]').forEach(button => button.addEventListener('click', () => {
  document.querySelectorAll('[data-filter]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
  let count = 0;

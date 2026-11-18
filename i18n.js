@@ -4,7 +4,6 @@ const englishTranslations = {
   "Langsung ke konten": "Skip to content",
   "Navigasi utama": "Main navigation",
   "PORTOFOLIO / RISFANDA AUDIARRAHMAN CHARISMA": "PORTFOLIO / RISFANDA AUDIARRAHMAN CHARISMA",
-  "Terbuka untuk peluang baru": "Open to new opportunities",
   "Halo, saya": "Hello, I'm",
   "Seorang Software Engineer dan lulusan Teknik Informatika Universitas Mataram. Siap menghadirkan solusi digital yang inovatif dan berdampak.": "A Software Engineer and Informatics graduate from the University of Mataram. Ready to build innovative digital solutions that make an impact.",
   "Lihat proyek saya": "View my projects",
@@ -41,7 +40,7 @@ const englishTranslations = {
   "Tentang saya": "About me",
   "Foto personal Risfanda": "Portrait of Risfanda",
   "Lulusan S1 Teknik Informatika Universitas Mataram (IPK 3.58/4.00) dengan fondasi ilmu komputer yang kuat dan keahlian praktis dalam Fullstack Web Development serta Data Analytics & Machine Learning.": "An Informatics graduate from the University of Mataram (GPA 3.58/4.00) with a strong foundation in computer science and practical skills in Fullstack Web Development, Data Analytics, and Machine Learning.",
-  "Berpengalaman membangun berbagai solusi digital, mulai dari aplikasi pengaduan publik berbasis serverless, e-commerce dengan arsitektur modern, hingga perancangan UI/UX untuk instansi pemerintah. Aktif mengembangkan diri melalui riset teknologi, salah satunya tercermin dari publikasi jurnal ilmiah di bidang keamanan digital. Saat ini terbuka untuk peluang baru di industri teknologi.": "Experienced in building digital solutions, from serverless public complaint applications and modern e-commerce platforms to UI/UX design for government agencies. Continuously learning through technology research, including a published journal article on digital security. Currently open to new opportunities in the technology industry.",
+  "Berpengalaman membangun berbagai solusi digital, mulai dari aplikasi pengaduan publik berbasis serverless, e-commerce dengan arsitektur modern, hingga perancangan UI/UX untuk instansi pemerintah. Aktif mengembangkan diri melalui riset teknologi, salah satunya tercermin dari publikasi jurnal ilmiah di bidang keamanan digital.": "Experienced in building digital solutions, from serverless public complaint applications and modern e-commerce platforms to UI/UX design for government agencies. Continuously learning through technology research, including a published journal article on digital security.",
   "IPK kelulusan": "Graduation GPA",
   "Media sosial dan kontak": "Social media and contact",
   "03 / KEAHLIAN": "03 / SKILLS",
@@ -65,7 +64,6 @@ const englishTranslations = {
   "2026 / SERTIFIKASI": "2026 / CERTIFICATIONS",
   "Lihat sertifikat ↗": "View certificate ↗",
   "05 / KONTAK": "05 / CONTACT",
-  "Terbuka untuk pekerjaan dan kolaborasi": "Open to work and collaboration",
   "Hubungi saya": "Get in touch",
   "Kirim email": "Send an email",
   "Untuk peluang kerja, kolaborasi,": "For job opportunities, collaboration,",
@@ -164,12 +162,14 @@ function applyLanguage(language) {
 }
 const languagePanel = document.querySelector('#language-panel');
 function closeLanguagePanel(restoreFocus = false) {
+ languagePanel.inert = true;
  languagePanel.hidden = true;
  languageSelect.setAttribute('aria-expanded', 'false');
  if (restoreFocus) languageSelect.focus();
 }
 languageSelect.addEventListener('click', () => {
  const open = languagePanel.hidden;
+ languagePanel.inert = !open;
  languagePanel.hidden = !open;
  languageSelect.setAttribute('aria-expanded', String(open));
  if (open) languagePanel.querySelector('input:checked').focus();
