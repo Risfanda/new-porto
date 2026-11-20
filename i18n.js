@@ -1,4 +1,8 @@
 const englishTranslations = {
+  "Beranda": "Home",
+  "Risfanda, Beranda": "Risfanda, Home",
+  "Proyek": "Projects",
+  "Kontak": "Contact",
   "Keahlian": "Skills",
   "Pengalaman": "Experience",
   "Langsung ke konten": "Skip to content",
@@ -60,9 +64,9 @@ const englishTranslations = {
   "LULUS 2026 / PENDIDIKAN": "GRADUATED 2026 / EDUCATION",
   "Universitas Mataram · IPK 3.58 / 4.00": "University of Mataram · GPA 3.58 / 4.00",
   "Riset tugas akhir: clustering tingkat kerentanan mahasiswa terhadap fraud OTP pada transaksi digital menggunakan metode K-Means.": "Undergraduate research: clustering students' vulnerability to OTP fraud in digital transactions using K-Means.",
-  "Baca tentang penelitian ↗": "Read about the research ↗",
+  "Baca tentang penelitian": "Read about the research",
   "2026 / SERTIFIKASI": "2026 / CERTIFICATIONS",
-  "Lihat sertifikat ↗": "View certificate ↗",
+  "Lihat sertifikat": "View certificate",
   "05 / KONTAK": "05 / CONTACT",
   "Hubungi saya": "Get in touch",
   "Kirim email": "Send an email",
@@ -151,7 +155,8 @@ function applyLanguage(language) {
  document.documentElement.lang = currentLanguage;
  document.querySelector('#language-current').textContent = currentLanguage.toUpperCase();
  document.querySelectorAll('input[name="language"]').forEach(input => { input.checked = input.value === currentLanguage; });
- textEntries.forEach(({node, original}) => { node.textContent = original.replace(original.trim(), translate(original.trim())); });
+ textEntries.forEach(({node, original}) => { const label = currentLanguage === 'en' && node.parentElement.dataset.en;
+  node.textContent = original.replace(original.trim(), label || translate(original.trim())); });
  attributeEntries.forEach(({element, name, original}) => element.setAttribute(name, translate(original)));
  languageSelect.setAttribute('aria-label', currentLanguage === 'en' ? 'Language' : 'Bahasa');
  document.title = currentLanguage === 'en' ? 'Ifan · Web Developer from Mataram' : 'Ifan · Developer Web dari Mataram';

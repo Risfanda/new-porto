@@ -217,7 +217,7 @@ document.querySelectorAll('[data-project]').forEach(button => button.addEventLis
  const stack = document.querySelector('#dialog-stack'); stack.replaceChildren();
  project.techStack.forEach(tech => { const span = document.createElement('span'); span.textContent = tech; stack.append(span); });
  const links = document.querySelector('#dialog-links'); links.replaceChildren();
- Object.entries(project.links || {}).forEach(([key,url]) => { const a = document.createElement('a'); a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = `${translate(linkLabels[key] || key)} ↗`; links.append(a); });
+ Object.entries(project.links || {}).forEach(([key,url]) => { const a = document.createElement('a'); a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.append(translate(linkLabels[key] || key) + ' ', document.querySelector('#project-link-arrow').content.cloneNode(true)); links.append(a); });
  dialog.showModal(); dialog.scrollTop = 0; dialog.querySelector('.dialog-close').focus();
 }));
 dialog.querySelector('.dialog-close').addEventListener('click', () => dialog.close());
