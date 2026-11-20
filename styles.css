@@ -107,7 +107,8 @@ h1{font-size:clamp(44px,5.1vw,72px)}
 
 body { isolation: isolate; }
 
-.night-sky { display: none; }
+.night-sky,
+.shooting-star { display: none; }
 
 [data-theme="dark"] .night-sky {
  --moon-top: clamp(100px, 19vh, 175px);
@@ -117,6 +118,7 @@ body { isolation: isolate; }
  position: fixed;
  inset: 0;
  z-index: -1;
+ overflow: hidden;
  pointer-events: none;
  background:
   radial-gradient(circle at 14% 21%, #d6e1ff85 1px, transparent 1.7px) 0 0 / 193px 161px,
@@ -142,6 +144,43 @@ body { isolation: isolate; }
 
 @media (prefers-reduced-motion: no-preference) {
  [data-theme="dark"] .night-sky::before { animation: star-twinkle 4s ease-in-out infinite; }
+
+ [data-theme="dark"] .shooting-star {
+  display: block;
+  position: absolute;
+  top: 12%;
+  left: 18%;
+  width: clamp(52px, 9vw, 112px);
+  height: 2px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, transparent, #adc8ff90 75%, #f0f6ff);
+  opacity: 0;
+  animation: shooting-star 6s linear infinite;
+ }
+
+ .shooting-star:nth-child(2) {
+  top: 28%;
+  left: 55%;
+  animation-delay: 2s;
+ }
+
+ .shooting-star:nth-child(3) {
+  top: 49%;
+  left: 7%;
+  animation-delay: 4s;
+ }
+}
+
+@keyframes shooting-star {
+ 0% {
+  opacity: 0;
+  transform: translate(0, 0) rotate(32deg);
+ }
+ 5% { opacity: 0.9; }
+ 30%, 100% {
+  opacity: 0;
+  transform: translate(clamp(150px, 28vw, 380px), clamp(94px, 17.5vw, 238px)) rotate(32deg);
+ }
 }
 
 @keyframes star-twinkle {
