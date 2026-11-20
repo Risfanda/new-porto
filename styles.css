@@ -103,7 +103,68 @@ h1{font-size:clamp(44px,5.1vw,72px)}
 .theme-toggle { display: inline-flex; align-items: center; justify-content: center; width: 44px; min-height: 44px; border-radius: 50%; flex-shrink: 0; }
 .theme-toggle:hover { background: var(--soft); color: var(--blue); }
 .sun-icon { display: none; }
-:root[data-theme="dark"] { color-scheme: dark; --paper: #191c19; --ink: #f0f1e9; --muted: #b4b9ac; --line: #3e443b; --blue: #9bb4ff; --soft: #262c25; }
+:root[data-theme="dark"] { color-scheme: dark; --paper: #101625; --ink: #f0f1e9; --muted: #b4b9ac; --line: #353e55; --blue: #9bb4ff; --soft: #1b2438; }
+
+body { isolation: isolate; }
+
+.night-sky { display: none; }
+
+[data-theme="dark"] .night-sky {
+ --moon-top: clamp(100px, 19vh, 175px);
+ --moon-right: clamp(24px, 5vw, 96px);
+ --moon-size: clamp(44px, 6vw, 88px);
+ display: block;
+ position: fixed;
+ inset: 0;
+ z-index: -1;
+ pointer-events: none;
+ background:
+  radial-gradient(circle at 14% 21%, #d6e1ff85 1px, transparent 1.7px) 0 0 / 193px 161px,
+  radial-gradient(circle at 81% 38%, #adc2f75c 1px, transparent 1.7px) 0 0 / 257px 213px,
+  radial-gradient(circle at 51% 76%, #dbe5ff50 0.7px, transparent 1.4px) 0 0 / 127px 141px,
+  radial-gradient(circle calc(var(--moon-size) * 1.35) at right calc(var(--moon-right) + var(--moon-size) * 0.5) top calc(var(--moon-top) + var(--moon-size) * 0.5), #bacdff36, transparent),
+  radial-gradient(circle at 89% 18%, #3a4f814d, transparent 48%);
+}
+
+.night-sky::before {
+ content: "";
+ position: absolute;
+ inset: 0;
+ opacity: 0.65;
+ background:
+  radial-gradient(ellipse 6px 1px, #e3edff, transparent) 12% 30% / 12px 12px no-repeat,
+  radial-gradient(ellipse 1px 6px, #e3edff, transparent) 12% 30% / 12px 12px no-repeat,
+  radial-gradient(ellipse 8px 1.5px, #e3edff, transparent) 76% 17% / 16px 16px no-repeat,
+  radial-gradient(ellipse 1.5px 8px, #e3edff, transparent) 76% 17% / 16px 16px no-repeat,
+  radial-gradient(ellipse 6px 1px, #e3edff, transparent) 90% 58% / 12px 12px no-repeat,
+  radial-gradient(ellipse 1px 6px, #e3edff, transparent) 90% 58% / 12px 12px no-repeat;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+ [data-theme="dark"] .night-sky::before { animation: star-twinkle 4s ease-in-out infinite; }
+}
+
+@keyframes star-twinkle {
+ 0%, 100% { opacity: 0.35; }
+ 50% { opacity: 1; }
+}
+
+.night-sky::after {
+ content: "";
+ position: absolute;
+ top: var(--moon-top);
+ right: var(--moon-right);
+ width: var(--moon-size);
+ aspect-ratio: 1;
+ border-radius: 50%;
+ background: linear-gradient(145deg, #fff7dd, #bdccf4);
+ mask-image: radial-gradient(circle at 29% 23%, transparent 51%, #000 53%);
+}
+
+@media (max-width: 700px) {
+ [data-theme="dark"] .night-sky { --moon-top: 152px; --moon-right: 22px; }
+}
+
 [data-theme="dark"] .moon-icon { display: none; }
 [data-theme="dark"] .sun-icon { display: block; }
 [data-theme="dark"] .primary { color: var(--paper); }
@@ -235,23 +296,23 @@ h1{font-size:clamp(44px,5.1vw,72px)}
 .hero-copy > h1,
 .hero-bottom,
 .hero-foot {
- animation: hero-enter 720ms var(--ease-out) backwards;
+ animation: hero-enter 760ms var(--ease-out) backwards;
 }
-.hero-copy > .intro { animation-delay: 60ms; }
-.hero-copy > h1 { animation-delay: 140ms; }
-.hero-bottom { animation-delay: 220ms; }
-.hero-foot { animation-delay: 280ms; }
-.portrait { animation: portrait-enter 800ms var(--ease-out) 160ms backwards; }
+.hero-copy > .intro { animation-delay: 110ms; }
+.hero-copy > h1 { animation-delay: 230ms; }
+.hero-bottom { animation-delay: 380ms; }
+.portrait { animation: portrait-enter 880ms var(--ease-out) 480ms backwards; }
+.hero-foot { animation-delay: 560ms; }
 .hero-bottom:focus-within,
 .hero-foot:focus-within { animation: none; }
 
 @keyframes hero-enter {
- from { opacity: 0; translate: 0 36px; }
+ from { opacity: 0; translate: 0 48px; }
  to { opacity: 1; translate: none; }
 }
 
 @keyframes portrait-enter {
- from { opacity: 0; translate: 0 44px; rotate: -8deg; scale: 0.9; }
+ from { opacity: 0; translate: 0 64px; rotate: -8deg; scale: 0.9; }
  to { opacity: 1; translate: none; rotate: none; scale: 1; }
 }
 

@@ -115,7 +115,7 @@ function updateThemeControl() {
  const dark = document.documentElement.dataset.theme === 'dark';
  themeToggle.setAttribute('aria-pressed', String(dark));
  themeToggle.title = dark ? 'Light mode' : 'Dark mode';
- document.querySelector('meta[name="theme-color"]').content = dark ? '#191c19' : '#f5f3ed';
+ document.querySelector('meta[name="theme-color"]').content = dark ? '#101625' : '#f5f3ed';
 }
 updateThemeControl();
 themeToggle.addEventListener('click', () => {
