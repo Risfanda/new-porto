@@ -137,25 +137,6 @@ const sectionObserver = new IntersectionObserver(entries => {
 }, { rootMargin: '-15% 0px -65% 0px', threshold: 0 });
 navSections.forEach(section => sectionObserver.observe(section));
 
-const revealTargets = document.querySelectorAll(
- '.about-copy, .about-photo, .section-head > p, .filters, .project, .skills-list > div, ' +
- '.journey-heading > p, .journey-entries > *, .contact-top, ' +
- '.contact-bottom, footer'
-);
-const revealObserver = new IntersectionObserver(entries => {
- entries.forEach(entry => {
-  if (!entry.isIntersecting) return;
-  revealObserver.unobserve(entry.target);
-  const target = entry.target;
-  target.classList.add('section-revealed');
-  const clearReveal = () => target.classList.remove('section-revealed');
-  const reveal = target.getAnimations().find(animation => animation.animationName === 'portfolio-enter');
-  if (reveal) reveal.finished.then(clearReveal, clearReveal);
-  else clearReveal();
- });
-}, { threshold: 0.08 });
-revealTargets.forEach(target => revealObserver.observe(target));
-
 document.querySelectorAll('.about-photo, .portrait-frame').forEach(photo => {
  photo.addEventListener('pointerdown', event => {
   if (event.pointerType === 'touch' && event.isPrimary) photo.classList.add('is-touched');
@@ -166,21 +147,20 @@ document.querySelectorAll('.about-photo, .portrait-frame').forEach(photo => {
 const portraitFrame = document.querySelector('.portrait-frame');
 const portraitReactions = [...portraitFrame.querySelectorAll('.portrait-reaction')];
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
-setupHeadingReveals();
+setupScrollReveals();
 
-function setupHeadingReveals() {
+function setupScrollReveals() {
  const {gsap, ScrollTrigger} = window;
  if (!gsap || !ScrollTrigger) return;
 
  gsap.registerPlugin(ScrollTrigger);
  // Startup refreshes can interrupt the browser's smooth scroll to a URL fragment.
  ScrollTrigger.config({autoRefreshEvents: 'visibilitychange,resize'});
- const activeReveals = new Set();
- const finishReveals = () => activeReveals.forEach(animation => animation.progress(1));
+ const activeReveals = new Map();
+ const finishReveals = () => activeReveals.forEach(finish => finish());
+ const contentEasing = getComputedStyle(document.documentElement).getPropertyValue('--ease-out').trim();
 
  function revealHeading(heading) {
-  if (reduceMotion.matches || heading.contains(document.activeElement)) return;
-
   const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT);
   const textNodes = [];
   while (walker.nextNode()) {
@@ -210,50 +190,75 @@ function setupHeadingReveals() {
   const hero = heading.tagName === 'H1';
   const finishReveal = () => animation.progress(1);
   gsap.set(words, {opacity: 0, yPercent: 35});
-  const animation = gsap.to(words, {
-   opacity: 1,
-   yPercent: 0,
-   duration: hero ? 0.65 : 0.48,
-   stagger: hero ? 0.13 : 0.07,
-   ease: 'power3.out',
+  const animation = gsap.timeline({
    onComplete() {
     // Restore the text nodes tracked by the language picker.
     runs.forEach(({run, node}) => run.replaceWith(node));
     heading.removeEventListener('focusin', finishReveal);
-    activeReveals.delete(animation);
+    activeReveals.delete(heading);
    }
   });
-  activeReveals.add(animation);
+  animation.to(words, {
+   opacity: 1,
+   yPercent: 0,
+   duration: hero ? 0.65 : 0.48,
+   stagger: hero ? 0.13 : 0.07,
+   ease: 'power3.out'
+  });
+  const underline = heading.querySelector('.name-underline');
+  if (underline) animation.fromTo(underline, {opacity: 0}, {opacity: 1, duration: 0.2, clearProps: 'opacity'}, 0.36);
+  activeReveals.set(heading, finishReveal);
   heading.addEventListener('focusin', finishReveal);
  }
 
- document.querySelectorAll('main h1, main h2').forEach(heading => {
-  if (ScrollTrigger.isInViewport(heading)) {
-   revealHeading(heading);
-   return;
-  }
+ function revealContent(target) {
+  const animation = target.animate([
+   {opacity: 0.25, translate: '0 16px'},
+   {opacity: 1, translate: 'none'}
+  ], {duration: 380, easing: contentEasing});
+  const finishReveal = () => {
+   activeReveals.delete(target);
+   target.removeEventListener('focusin', finishReveal);
+   animation.cancel();
+  };
+  activeReveals.set(target, finishReveal);
+  target.addEventListener('focusin', finishReveal);
+  animation.onfinish = finishReveal;
+ }
+
+ function watchReveal(target, play) {
+  const enter = () => {
+   if (reduceMotion.matches || activeReveals.has(target) || target.contains(document.activeElement) || target.hidden) return;
+   play(target);
+  };
   ScrollTrigger.create({
-   trigger: heading,
-   start: () => heading.getBoundingClientRect().top + window.scrollY - window.innerHeight,
-   end: () => heading.getBoundingClientRect().bottom + window.scrollY,
+   trigger: target,
+   start: () => target.getBoundingClientRect().top + window.scrollY - window.innerHeight,
+   end: () => target.getBoundingClientRect().bottom + window.scrollY,
    onToggle(trigger) {
-    if (!trigger.isActive) return;
-    trigger.kill();
-    revealHeading(heading);
+    if (trigger.isActive) enter();
+    else activeReveals.get(target)?.();
    }
   });
- });
+  if (ScrollTrigger.isInViewport(target)) enter();
+ }
+
+ document.querySelectorAll('main h1, main h2').forEach(heading => watchReveal(heading, revealHeading));
+ document.querySelectorAll(
+  '.hero-bottom, .about-copy, .about-photo, .section-head > p, .filters, .project, .skills-list > div, ' +
+  '.journey-heading > p, .journey-entries > *, .contact-top, .contact-bottom, footer'
+ ).forEach(target => watchReveal(target, revealContent));
 
  reduceMotion.addEventListener('change', () => {
   if (reduceMotion.matches) finishReveals();
  });
  document.addEventListener('beforelanguagechange', () => {
   finishReveals();
-  queueMicrotask(refreshHeadingTriggers);
+  queueMicrotask(refreshRevealTriggers);
  });
 }
 
-function refreshHeadingTriggers() {
+function refreshRevealTriggers() {
  window.ScrollTrigger?.getAll().forEach(trigger => trigger.refresh());
 }
 
@@ -293,7 +298,7 @@ document.querySelectorAll('[data-filter]').forEach(button => button.addEventList
  let count = 0;
  document.querySelectorAll('.project').forEach(project => { project.hidden = button.dataset.filter !== 'all' && project.dataset.category !== button.dataset.filter; if(!project.hidden) count++; });
  document.querySelector('#filter-status').textContent = currentLanguage === 'en' ? `${count} projects displayed.` : `${count} proyek ditampilkan.`;
- refreshHeadingTriggers();
+ refreshRevealTriggers();
 }));
 const dialog = document.querySelector('#project-dialog');
 let projectTrigger;
