@@ -146,6 +146,7 @@ document.querySelectorAll('[aria-label], [alt]').forEach(element => {
  }
 });
 function applyLanguage(language) {
+ document.dispatchEvent(new Event('beforelanguagechange'));
  currentLanguage = language === 'en' ? 'en' : 'id';
  document.documentElement.lang = currentLanguage;
  document.querySelector('#language-current').textContent = currentLanguage.toUpperCase();

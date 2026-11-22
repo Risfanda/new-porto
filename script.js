@@ -138,8 +138,8 @@ const sectionObserver = new IntersectionObserver(entries => {
 navSections.forEach(section => sectionObserver.observe(section));
 
 const revealTargets = document.querySelectorAll(
- '.about-grid > *, .section-head, .filters, .project, .skills-list > div, ' +
- '.journey-heading, .journey-entries > *, .contact-top, .contact-section h2, ' +
+ '.about-copy, .about-photo, .section-head > p, .filters, .project, .skills-list > div, ' +
+ '.journey-heading > p, .journey-entries > *, .contact-top, ' +
  '.contact-bottom, footer'
 );
 const revealObserver = new IntersectionObserver(entries => {
@@ -166,6 +166,97 @@ document.querySelectorAll('.about-photo, .portrait-frame').forEach(photo => {
 const portraitFrame = document.querySelector('.portrait-frame');
 const portraitReactions = [...portraitFrame.querySelectorAll('.portrait-reaction')];
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+setupHeadingReveals();
+
+function setupHeadingReveals() {
+ const {gsap, ScrollTrigger} = window;
+ if (!gsap || !ScrollTrigger) return;
+
+ gsap.registerPlugin(ScrollTrigger);
+ // Startup refreshes can interrupt the browser's smooth scroll to a URL fragment.
+ ScrollTrigger.config({autoRefreshEvents: 'visibilitychange,resize'});
+ const activeReveals = new Set();
+ const finishReveals = () => activeReveals.forEach(animation => animation.progress(1));
+
+ function revealHeading(heading) {
+  if (reduceMotion.matches || heading.contains(document.activeElement)) return;
+
+  const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT);
+  const textNodes = [];
+  while (walker.nextNode()) {
+   const node = walker.currentNode;
+   if (node.data.trim() && !node.parentElement.closest('svg, [aria-hidden="true"]')) textNodes.push(node);
+  }
+
+  const words = [];
+  const runs = textNodes.map(node => {
+   // Keep each text run together as one flex item in the contact link.
+   const run = document.createElement('span');
+   for (const part of node.data.match(/[^ \t\r\n\f]+|[ \t\r\n\f]+/g)) {
+    if (!part.trim()) {
+     run.append(part);
+     continue;
+    }
+    const word = document.createElement('span');
+    word.className = 'heading-word';
+    word.textContent = part;
+    run.append(word);
+    words.push(word);
+   }
+   node.replaceWith(run);
+   return {run, node};
+  });
+
+  const hero = heading.tagName === 'H1';
+  const finishReveal = () => animation.progress(1);
+  gsap.set(words, {opacity: 0, yPercent: 35});
+  const animation = gsap.to(words, {
+   opacity: 1,
+   yPercent: 0,
+   duration: hero ? 0.65 : 0.48,
+   stagger: hero ? 0.13 : 0.07,
+   ease: 'power3.out',
+   onComplete() {
+    // Restore the text nodes tracked by the language picker.
+    runs.forEach(({run, node}) => run.replaceWith(node));
+    heading.removeEventListener('focusin', finishReveal);
+    activeReveals.delete(animation);
+   }
+  });
+  activeReveals.add(animation);
+  heading.addEventListener('focusin', finishReveal);
+ }
+
+ document.querySelectorAll('main h1, main h2').forEach(heading => {
+  if (ScrollTrigger.isInViewport(heading)) {
+   revealHeading(heading);
+   return;
+  }
+  ScrollTrigger.create({
+   trigger: heading,
+   start: () => heading.getBoundingClientRect().top + window.scrollY - window.innerHeight,
+   end: () => heading.getBoundingClientRect().bottom + window.scrollY,
+   onToggle(trigger) {
+    if (!trigger.isActive) return;
+    trigger.kill();
+    revealHeading(heading);
+   }
+  });
+ });
+
+ reduceMotion.addEventListener('change', () => {
+  if (reduceMotion.matches) finishReveals();
+ });
+ document.addEventListener('beforelanguagechange', () => {
+  finishReveals();
+  queueMicrotask(refreshHeadingTriggers);
+ });
+}
+
+function refreshHeadingTriggers() {
+ window.ScrollTrigger?.getAll().forEach(trigger => trigger.refresh());
+}
+
 portraitFrame.addEventListener('pointerenter', event => {
  if (event.pointerType === 'mouse') playPortraitReactions();
 });
@@ -202,6 +293,7 @@ document.querySelectorAll('[data-filter]').forEach(button => button.addEventList
  let count = 0;
  document.querySelectorAll('.project').forEach(project => { project.hidden = button.dataset.filter !== 'all' && project.dataset.category !== button.dataset.filter; if(!project.hidden) count++; });
  document.querySelector('#filter-status').textContent = currentLanguage === 'en' ? `${count} projects displayed.` : `${count} proyek ditampilkan.`;
+ refreshHeadingTriggers();
 }));
 const dialog = document.querySelector('#project-dialog');
 let projectTrigger;
