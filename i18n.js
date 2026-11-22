@@ -87,7 +87,7 @@ const englishTranslations = {
   "Lihat detail TixZone": "View TixZone details",
   "Lihat detail Riset Fraud OTP": "View OTP Fraud Research details",
   "Lihat detail Public Reward": "View Public Reward details",
-  "Screenshot aplikasi BP3MI Protect: petunjuk pelaporan dan formulir pengaduan publik": "BP3MI Protect screenshot: reporting instructions and public complaint form",
+  "Halaman Buat aduan BP3MI Protect dengan panduan pelaporan, formulir pengaduan pekerja migran, dan unggahan foto bukti": "BP3MI Protect complaint page with reporting instructions, a migrant worker complaint form, and a photo evidence upload",
   "Halaman beranda aplikasi Kopi Senja: hero, menu favorit, dan navigasi toko": "Kopi Senja homepage: hero, favorite menu items, and store navigation",
   "Halaman detail acara TixZone: banner konser, jadwal, lineup, dan pilihan tiket": "TixZone event details: concert banner, schedule, lineup, and ticket options",
   "Infografis hasil penelitian: grafik Elbow Method, sebaran cluster PCA, dan tabel Silhouette Score": "Research infographic: Elbow Method chart, PCA clusters, and Silhouette Score table",
