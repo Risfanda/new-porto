@@ -118,11 +118,18 @@ function updateThemeControl() {
  document.querySelector('meta[name="theme-color"]').content = dark ? '#101625' : '#f5f3ed';
 }
 updateThemeControl();
+let themeSwitchFrame;
 themeToggle.addEventListener('click', () => {
- const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
- document.documentElement.dataset.theme = theme;
+ const root = document.documentElement;
+ const theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+ root.classList.add('theme-switching');
+ root.dataset.theme = theme;
  try { localStorage.setItem('theme', theme); } catch {}
  updateThemeControl();
+ cancelAnimationFrame(themeSwitchFrame);
+ themeSwitchFrame = requestAnimationFrame(() => {
+  themeSwitchFrame = requestAnimationFrame(() => root.classList.remove('theme-switching'));
+ });
 });
 const navLinks = [...navigation.querySelectorAll('a')];
 const navSections = [...document.querySelectorAll('main > section[id]')];

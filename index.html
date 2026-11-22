@@ -1,18 +1,25 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Portofolio Risfanda Audiarrahman Charisma, fullstack web developer, UI/UX, dan data analytics dari Mataram. Jelajahi proyek dan pengalaman saya.">
-<meta name="theme-color" content="#f5f3ed">
+<meta name="theme-color" content="#101625">
 <title>Ifan · Developer Web dari Mataram</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet">
-<script>try { document.documentElement.dataset.theme = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch { document.documentElement.dataset.theme = 'light'; }</script>
-<link rel="stylesheet" href="styles.css?v=section-replay">
+<script>
+ try {
+  if (localStorage.getItem('theme') === 'light') {
+   document.documentElement.dataset.theme = 'light';
+   document.querySelector('meta[name="theme-color"]').content = '#f5f3ed';
+  }
+ } catch {}
+</script>
+<link rel="stylesheet" href="styles.css?v=theme-swap">
 <script src="i18n.js?v=heading-reveal" defer></script>
 <script src="assets/vendor/gsap-3.13.0.min.js" defer></script>
 <script src="assets/vendor/ScrollTrigger-3.13.0.min.js" defer></script>
-<script src="script.js?v=section-replay" defer></script>
+<script src="script.js?v=theme-swap" defer></script>
 </head>
 <body>
 <div class="night-sky" aria-hidden="true">

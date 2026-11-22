@@ -103,6 +103,7 @@ h1{font-size:clamp(44px,5.1vw,72px)}
 .theme-toggle { display: inline-flex; align-items: center; justify-content: center; width: 44px; min-height: 44px; border-radius: 50%; flex-shrink: 0; }
 .theme-toggle:hover { background: var(--soft); color: var(--blue); }
 .sun-icon { display: none; }
+:root { background-color: var(--paper); }
 :root[data-theme="dark"] { color-scheme: dark; --paper: #101625; --ink: #f0f1e9; --muted: #b4b9ac; --line: #353e55; --blue: #9bb4ff; --soft: #1b2438; }
 
 body { isolation: isolate; }
@@ -384,13 +385,6 @@ body { isolation: isolate; }
 .theme-toggle:active,
 .language-select:active { scale: 0.97; }
 
-body,
-.about-section,
-.contact-section,
-.header {
- transition: background-color var(--motion-dialog) ease, color var(--motion-dialog) ease;
-}
-
 .language-panel {
  opacity: 1;
  scale: 1;
@@ -488,6 +482,10 @@ body,
  transition: color var(--motion-panel), background-color var(--motion-panel),
   opacity var(--motion-panel), scale var(--motion-press) var(--ease-out),
   translate var(--motion-press) var(--ease-out);
+}
+
+.theme-switching :is(a, button, .language-option) {
+ transition-property: opacity, scale, translate !important;
 }
 
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
