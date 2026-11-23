@@ -1,22 +1,22 @@
 const projects = {
   "tixzone-uiux": {
-    "title": "TixZone – Platform Penjualan Tiket Event UI/UX",
-    "tag": "Studi kasus UI/UX · 2026",
-    "description": "Desain website pemesanan tiket konser dan acara. Saya merancang alur dari pencarian acara, pemilihan kategori tiket, pengisian data pemesan, hingga penerbitan e-ticket.",
+    "title": "TixZone – Platform Pemesanan Tiket Konser",
+    "tag": "Aplikasi web fullstack · 2026",
+    "description": "Saya membangun TixZone untuk pemesanan tiket konser dan pengelolaan acara. Pelanggan memilih tiket dan menerima e-tiket setelah pembayaran terkonfirmasi. Promotor mengelola acara dan kuota, sementara petugas memvalidasi tiket di gerbang.",
     "features": [
-      "Merancang katalog acara dengan filter kategori dan harga.",
-      "Menampilkan pilihan kategori tiket beserta kuota yang tersedia.",
-      "Menyusun formulir pemesan dan simulasi pilihan pembayaran.",
-      "Merancang e-ticket dengan QR code untuk pemeriksaan di lokasi acara.",
-      "Membuat prototipe interaktif untuk mencoba alur pemesanan."
+      "Menahan kuota selama 15 menit dan mengembalikannya saat reservasi batal atau kedaluwarsa.",
+      "Mengintegrasikan Midtrans Snap dan memverifikasi webhook sebelum menerbitkan e-tiket.",
+      "Menghasilkan QR yang diperbarui berkala dan menolak check-in ulang.",
+      "Menyediakan portal promotor untuk mengelola acara, kategori tiket, dan kuota.",
+      "Mendukung pendaftaran promotor dengan bukti pendaftaran yang dapat dikirim lewat WhatsApp."
     ],
     "techStack": [
-      "Figma",
-      "UI/UX Design",
-      "Interactive Prototyping",
-      "User Flow",
-      "Design System",
-      "Wireframing"
+      "Laravel 13",
+      "PHP",
+      "MySQL",
+      "Blade",
+      "Tailwind CSS",
+      "Midtrans Snap"
     ],
     "links": {
       "prototype": "https://stitch.withgoogle.com/preview/14796760051856988866?node-id=87913dd5e23847a6a0f05ed46e393085",
