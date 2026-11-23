@@ -44,8 +44,7 @@ const projects = {
       "Vercel Deployment"
     ],
     "links": {
-      "demo": "https://bp3mi-ticketing.vercel.app",
-      "github": "https://github.com/Risfanda/bp3mi-ticketing"
+      "demo": "https://bp3mi-ticketing.vercel.app"
     }
   },
   "kopi-senja": {
@@ -66,6 +65,29 @@ const projects = {
       "Alpine.js",
       "Blade Templating"
     ]
+  },
+  "lamarin": {
+    "title": "LamarIn – Pelacak Lamaran Kerja",
+    "tag": "Aplikasi web · 2026",
+    "description": "Saya membangun LamarIn untuk menyimpan riwayat lamaran kerja dan memantau tahapan rekrutmen dalam satu dashboard.",
+    "features": [
+      "Menambahkan, mengubah, dan menghapus lamaran serta memfilter daftar berdasarkan status.",
+      "Membangun pendaftaran dan login email dengan Supabase Auth.",
+      "Membatasi akses data lamaran ke pemilik akun dengan PostgreSQL Row Level Security.",
+      "Menyediakan mode demo dengan data contoh yang bisa dicoba langsung."
+    ],
+    "techStack": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "Vite",
+      "Supabase Auth",
+      "PostgreSQL (RLS)",
+      "Vercel"
+    ],
+    "links": {
+      "demo": "https://lamarin-fawn.vercel.app"
+    }
   },
   "otp-research": {
     "title": "Riset Clustering Kerentanan Fraud OTP",
@@ -340,7 +362,7 @@ document.querySelectorAll('[data-filter]').forEach(button => button.addEventList
 }));
 const dialog = document.querySelector('#project-dialog');
 let projectTrigger;
-const linkLabels = { demo: 'Buka aplikasi', github: 'Kode sumber', prototype: 'Lihat prototipe', figma: 'Buka Figma', journal: 'Baca penelitian' };
+const linkLabels = { demo: 'Buka aplikasi', prototype: 'Lihat prototipe', figma: 'Buka Figma', journal: 'Baca penelitian' };
 document.querySelectorAll('[data-project]').forEach(button => button.addEventListener('click', () => {
  const project = projects[button.dataset.project]; if(!project) return;
  projectTrigger = button;
