@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Portofolio Risfanda Audiarrahman Charisma, fullstack web developer, UI/UX, dan data analytics dari Mataram. Jelajahi proyek dan pengalaman saya.">
-<meta name="theme-color" content="#101625">
+<meta name="theme-color" content="#24211d">
 <title>Ifan · Developer Web dari Mataram</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet">
@@ -11,15 +11,15 @@
  try {
   if (localStorage.getItem('theme') === 'light') {
    document.documentElement.dataset.theme = 'light';
-   document.querySelector('meta[name="theme-color"]').content = '#f5f3ed';
+   document.querySelector('meta[name="theme-color"]').content = '#f5f1e8';
   }
  } catch {}
 </script>
-<link rel="stylesheet" href="styles.css?v=theme-swap">
-<script src="i18n.js?v=heading-reveal" defer></script>
+<link rel="stylesheet" href="styles.css?v=navbar-accessibility">
+<script src="i18n.js?v=navbar-accessibility" defer></script>
 <script src="assets/vendor/gsap-3.13.0.min.js" defer></script>
 <script src="assets/vendor/ScrollTrigger-3.13.0.min.js" defer></script>
-<script src="script.js?v=theme-swap" defer></script>
+<script src="script.js?v=mobile-menu" defer></script>
 </head>
 <body>
 <div class="night-sky" aria-hidden="true">
@@ -31,6 +31,12 @@
   <span class="shooting-star"></span>
   <span class="shooting-star"></span>
   <span class="shooting-star"></span>
+  <span class="twinkling-stars">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </span>
 </div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <symbol id="arrow-up-right" viewBox="0 0 24 24">

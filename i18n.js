@@ -171,6 +171,16 @@ function applyLanguage(language) {
  try { localStorage.setItem('language', currentLanguage); } catch {}
 }
 const languagePanel = document.querySelector('#language-panel');
+function fitLanguagePanel() {
+ if (languagePanel.hidden || !languagePanel.offsetParent) return;
+ const viewportBottom = window.innerHeight - 12;
+ const anchorBottom = languagePanel.offsetParent.getBoundingClientRect().bottom;
+ const gap = parseFloat(getComputedStyle(languagePanel).getPropertyValue('--language-panel-gap'));
+ languagePanel.classList.toggle('language-panel--overlap', viewportBottom - anchorBottom - gap < 120);
+ const availableHeight = viewportBottom - languagePanel.getBoundingClientRect().top;
+ languagePanel.style.maxHeight = `${Math.max(0, Math.floor(availableHeight))}px`;
+}
+
 function closeLanguagePanel(restoreFocus = false) {
  languagePanel.inert = true;
  languagePanel.hidden = true;
@@ -182,8 +192,13 @@ languageSelect.addEventListener('click', () => {
  languagePanel.inert = !open;
  languagePanel.hidden = !open;
  languageSelect.setAttribute('aria-expanded', String(open));
- if (open) languagePanel.querySelector('input:checked').focus();
+ if (open) {
+  fitLanguagePanel();
+  languagePanel.querySelector('input:checked').focus();
+ }
 });
+window.addEventListener('resize', fitLanguagePanel);
+window.addEventListener('scroll', fitLanguagePanel, { passive: true });
 languagePanel.addEventListener('change', event => {
  if (event.target.matches('input[name="language"]')) applyLanguage(event.target.value);
 });

@@ -141,7 +141,7 @@ function setMenuExpanded(expanded) {
 }
 
 function syncCompactMenu() {
- const compact = mobileNav.matches && window.scrollY > (header.classList.contains('compact') ? 32 : 160);
+ const compact = mobileNav.matches;
  if (compact === header.classList.contains('compact')) return;
  const focused = document.activeElement;
  setMenuExpanded(compact && navigation.contains(focused) && focused.matches(':focus-visible'));
@@ -150,8 +150,19 @@ function syncCompactMenu() {
 }
 
 compactMenu.addEventListener('click', () => setMenuExpanded(compactMenu.getAttribute('aria-expanded') !== 'true'));
+navigation.addEventListener('click', event => {
+ const link = event.target.closest('a[href^="#"]');
+ if (!link || compactMenu.getAttribute('aria-expanded') !== 'true') return;
+ setMenuExpanded(false);
+ if (event.detail !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+ const section = document.getElementById(link.hash.slice(1));
+ const heading = section?.querySelector('h1, h2');
+ if (!heading) return;
+ heading.tabIndex = -1;
+ requestAnimationFrame(() => heading.focus({ preventScroll: true }));
+});
 document.addEventListener('click', event => {
- if (!header.contains(event.target) || event.target.closest('#navigation a')) setMenuExpanded(false);
+ if (!header.contains(event.target)) setMenuExpanded(false);
 });
 header.addEventListener('keydown', event => {
  if (event.key === 'Escape' && compactMenu.getAttribute('aria-expanded') === 'true' && document.querySelector('#language-panel').hidden) {
@@ -159,7 +170,6 @@ header.addEventListener('keydown', event => {
   compactMenu.focus();
  }
 });
-window.addEventListener('scroll', syncCompactMenu, { passive: true });
 mobileNav.addEventListener('change', syncCompactMenu);
 syncCompactMenu();
 
@@ -168,7 +178,7 @@ function updateThemeControl() {
  const dark = document.documentElement.dataset.theme === 'dark';
  themeToggle.setAttribute('aria-pressed', String(dark));
  themeToggle.title = dark ? 'Light mode' : 'Dark mode';
- document.querySelector('meta[name="theme-color"]').content = dark ? '#101625' : '#f5f3ed';
+ document.querySelector('meta[name="theme-color"]').content = dark ? '#24211d' : '#f5f1e8';
 }
 updateThemeControl();
 let themeSwitchFrame;
