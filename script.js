@@ -89,6 +89,27 @@ const projects = {
       "demo": "https://lamarin-fawn.vercel.app"
     }
   },
+  "lintas-rental": {
+    "title": "Lintas Rental",
+    "tag": "Platform sewa mobil · 2026",
+    "description": "Lintas membantu penyewa mencari mobil lepas kunci di Lombok, mengajukan jadwal sewa, dan membayar langsung ke pemilik saat mengambil mobil.",
+    "features": [
+      "Membuat katalog dan kalender WITA yang menonaktifkan hari yang sudah terisi.",
+      "Menerapkan persetujuan pemilik dan mencegah jadwal aktif bertabrakan di PostgreSQL.",
+      "Membuat dashboard untuk penyewa, pemilik mobil, dan admin.",
+      "Mencatat pembayaran serta kondisi mobil saat pengambilan dan pengembalian."
+    ],
+    "techStack": [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Supabase Auth",
+      "PostgreSQL"
+    ],
+    "links": {
+      "demo": "https://lintas-rental.vercel.app/"
+    }
+  },
   "otp-research": {
     "title": "Riset Clustering Kerentanan Fraud OTP",
     "tag": "Skripsi · Analisis data & machine learning",
@@ -372,7 +393,7 @@ document.querySelectorAll('[data-filter]').forEach(button => button.addEventList
 }));
 const dialog = document.querySelector('#project-dialog');
 let projectTrigger;
-const linkLabels = { demo: 'Buka aplikasi', prototype: 'Lihat prototipe', figma: 'Buka Figma', journal: 'Baca penelitian' };
+const linkLabels = { demo: 'Buka aplikasi', prototype: 'Lihat prototipe', figma: 'Buka Figma', journal: 'Baca penelitian', source: 'Lihat kode sumber' };
 document.querySelectorAll('[data-project]').forEach(button => button.addEventListener('click', () => {
  const project = projects[button.dataset.project]; if(!project) return;
  projectTrigger = button;
